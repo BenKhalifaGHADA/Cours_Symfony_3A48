@@ -1,0 +1,76 @@
+<h1>Bonjour {{name}} </h1> {# {{ }} Afficher la variable de notre contrôlleur  #}
+
+{% set a=5 %} {# Déclarer une var avec TWIG #}
+La valeur de a est : {{ a }}  {# C'est l'affichage  #}
+{% set PI=3.14 %}
+{{ PI }}
+{% set Ch="Hello" %}
+{{ Ch }}
+
+
+
+{%if a!=6 %} {# Exécuter une action #}
+ <h1>C'est un message d'erreur </h1>
+ {% else %}
+ <h1>LA valeur de a est {{ a }}</h1>
+{%endif%}
+
+{# {% set b=5,c=6, d=true %} #}
+{% set b=5 %}
+{% set c=2 %}
+{% set d=true %}
+{% if ((a==1 and b>0) or not c==0) and d is defined %}
+  {% set resultat = (d + a * b) / c %}
+  {{ resultat }}
+    {% else%}
+    <h2>C'est un erreur </h2>
+{% endif %}
+
+{% if 'Fabien' starts with 'F' %}
+    commence par F
+{% endif %}
+
+{% if 'Fabien' ends with 'n' %}
+    Finis par n
+{% endif %}
+
+{% set var=5 %}
+{# LA première syntaxe #}
+{% if var  is odd %}       {# c'est l'inverse de even #}
+    Ceci une variable impair
+{%else%}
+    Ceci une variable pair
+{% endif %}
+{# LA deuxième syntaxe #}
+{#C'est une syntaxe tertiaire  #}
+{{ var is odd? ' Ceci une variable impair': 'Ceci une variable pair' }}
+<br>
+{% set tab=[1,2,3] %} {# indice de Tab[0]=1, tab[1]=, tab[2] #}
+{% for i in tab %} {# for (i=0; i<long(tab); i++ #}
+  {{ i }}
+
+{% endfor %}
+<br>
+<h1>Tableau des chaînes</h1>
+{% set tab2=["ch1","ch2","ch3"] %}
+{% for j in tab2 %}
+    {{ j }}
+{% endfor %}
+
+<br>
+<h1>Tableau associatif</h1>
+{#  {% set tab3=['nom'=>'etudiant1','prenom'=>'Ben foulen '] %}#}
+{% set tab3 = {'nom': 'etudiant1', 'prenom': 'Ben foulen'} %}
+{% for key, value in tab3 %}
+    {{ key }}: {{ value }}
+{% endfor %}
+
+{% set ch1="hello" %}
+{# HELLO #}
+
+{{ ch1|upper }}
+
+<a href="{{ path('app_teacher') }}">Home</a> {# Rediriger vers la page index de teacher  #}
+<a href="{{ url('app_teacher') }}">Home_URL</a>
+
+<img src="{{ asset('images/Taha_Hussein.jpg') }}">
