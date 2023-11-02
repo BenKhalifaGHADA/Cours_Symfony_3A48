@@ -127,5 +127,13 @@ public function updateAuthor($id,AuthorRepository $repo,Request $req,ManagerRegi
         return $this->render('author/update.html.twig',['form'=>$form->createView()]);
 }
 
+    //Query Builder: Question 1
+    #[Route('/author/list/OrderByEmail', name: 'app_author_list_ordered', methods: ['GET'])]
+    public function listAuthorByEmail(AuthorRepository $authorRepository): Response
+    {
+        return $this->render('author/orderedList.html.twig', [
+            'authors' => $authorRepository->showAllAuthorsOrderByEmail(),
+        ]);
+    }
 
 }

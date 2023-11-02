@@ -44,5 +44,14 @@ class AuthorRepository extends ServiceEntityRepository
 //            ->getQuery()
 //            ->getOneOrNullResult()
 //        ;
-//    }
+
+//Query Builder: Question 1
+    public function showAllAuthorsOrderByEmail()
+    {
+        return $this->createQueryBuilder('a')
+            ->orderBy('a.email','DESC')
+            ->getQuery()
+            ->getResult()
+            ;
+    }
 }

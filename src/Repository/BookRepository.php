@@ -21,6 +21,29 @@ class BookRepository extends ServiceEntityRepository
         parent::__construct($registry, Book::class);
     }
 
+    public function showBooksQB(){
+        $list=$this->createQueryBuilder('b')
+            ->where('b.title',':param')
+            ->andWhere('b.title',':param2')
+            ->setParameter('param','a%') //Les paramètres nommés
+            ->setParameter('param2','%b')
+            //->setParameters(['param'=>'a%','param2'=>'%b'])
+                ->orderBy('b.title','ASC')
+            ->getQuery()
+            ->getResult();
+        return $list;
+
+        //->where('b.title','?1')
+        //->setParameter('1','a%') //Les paramètres positionnels
+    }
+
+    public function showBookDQL(){
+        $em=$this->getEntityManager();
+        $list=$em->createQuery('select b from App\Entity\Book b where b.title LIKE :param')
+            ->setParameter('param','%a')
+            ->getResult();
+        return  $list;
+    }
 //    /**
 //     * @return Book[] Returns an array of Book objects
 //     */
@@ -45,4 +68,67 @@ class BookRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
+    //Query Builder: Question 2
+    public function showAllBooksByRef($ref)
+    {
+        return $this->createQueryBuilder('b')
+            ->join('b.author', 'a')
+            ->addSelect('a')
+            ->where('b.ref = :ref')
+            ->setParameter('ref', $ref)
+            ->getQuery()
+            ->getResult();
+    }
+    //Query Builder: Question 4
+    public function showBooksByDateAndNbBooks($nbooks, $year)
+    {
+        return $this->createQueryBuilder('b')
+            ->join('b.author', 'a')
+            ->addSelect('a')
+            ->where('a.nb_books > :nbooks')
+            ->andWhere("b.publicationDate < :year")
+            ->setParameter('nbooks', $nbooks)
+            ->setParameter('year', $year)
+            ->getQuery()
+            ->getResult();
+    }
+
+    //Query Builder: Question 5
+    public function updateBooksCategoryByAuthor($c)
+    {
+        return $this->getEntityManager()->createQueryBuilder()
+            ->update('App\Entity\Book', 'b')
+
+            ->set('b.category', '?1')
+            ->setParameter(1, 'Romance')
+            ->where('b.category LIKE ?2')
+            ->setParameter(2, $c)
+            ->getQuery()
+            ->getResult();
+    }
+// DQL
+    //Question 1
+    function NbBookCategory()
+    {
+        $em = $this->getEntityManager();
+        return $em->createQuery('select count(b) from App\Entity\Book b WHERE b.category=:category')
+            ->setParameter('category', 'Romance')->getSingleScalarResult();
+    }
+    //Question 2
+    function findBookByPublicationDate()
+    {
+        $em = $this->getEntityManager();
+        return $em->createQuery('select b from App\Entity\Book b WHERE 
+    b.publicationDate BETWEEN ?1 AND ?2')
+            ->setParameter(1, '2014-01-01')
+            ->setParameter(2, '2018-01-01')->getResult();
+    }
+    function UpdateQB()
+    {
+        return $this->createQueryBuilder('b')
+            ->update()->set('b.category', '?1')->setParameter(1, 'Romance')
+            ->where('b.category=?2')->setParameter(2, 'Science Fiction ')
+            ->getQuery()->getResult();
+    }
+
 }
